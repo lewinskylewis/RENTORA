@@ -101,6 +101,7 @@ export function Dashboard({ onNav, guest = false, onAuth = () => {} }: { onNav: 
                 </p>
               </div>
               <div className="text-right">
+                <div className="text-sm font-medium text-white/60 uppercase tracking-wider mb-2">Next Payment</div>
                 <div className="text-3xl font-light text-transparent bg-clip-text mb-1" style={{ backgroundImage: theme.rentGrad }}>
                   Kes {currentHome.rentAmount.toLocaleString()}
                 </div>
