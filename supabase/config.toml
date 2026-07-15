@@ -1,0 +1,14 @@
+# Supabase project config (used by the Supabase CLI).
+# `project_id` is a local label; link to your hosted project with:
+#   supabase link --project-ref <your-project-ref>
+project_id = "rentora"
+
+[db]
+major_version = 15
+
+[auth]
+# Allow email/password signups (public tenant registration).
+enable_signup = true
+
+[auth.email]
+enable_confirmations = false   # set true in production once SMTP is configured

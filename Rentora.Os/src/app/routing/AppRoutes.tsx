@@ -1,5 +1,5 @@
 import { Navigate, Outlet, Route, Routes, useParams } from "react-router";
-import { AppLayout } from "@/app/layouts";
+import { AppLayout, AgentLayout, AdminLayout, TenantThemeShell } from "@/app/layouts";
 import type { Theme } from "@/app/theme";
 import type { AuthState, NavState } from "@/app/types";
 import { About } from "@/app/features/about";
@@ -15,6 +15,12 @@ import { NotFoundPage } from "@/app/features/not-found";
 import { Notifications } from "@/app/features/notifications";
 import { PayRent, PaymentSuccess } from "@/app/features/payments";
 import { Profile } from "@/app/features/profile";
+import { AgentApplication, AgentApplicationStatus } from "@/app/features/onboarding";
+import {
+  AgentDashboard, Properties, Units, Tenants, Vacancies, Maintenance, Leads, Finance, Reports, Settings,
+} from "@/app/features/agent";
+import { AdminDashboard, AgentApplicationsPage, AgentsPage, AgenciesPage } from "@/app/features/admin";
+import { RequireAuth, RequireAgent, RequireAdmin } from "./guards";
 
 interface AppRoutesProps {
   authState: AuthState;
@@ -45,30 +51,46 @@ export function AppRoutes({
 }: AppRoutesProps) {
   const guest = authState === "guest";
 
-  // Shared app chrome (Sidebar + Header) rendered once for every routed page.
-  const chrome = (
-    <AppLayout
-      sidebarOpen={sidebarOpen}
-      onOpenSidebar={onOpenSidebar}
-      onCloseSidebar={onCloseSidebar}
-      onNav={onNav}
-      activeTheme={activeTheme}
-      onThemeChange={onThemeChange}
-      guest={guest}
-      onAuth={onRequireAuth}
-      onSignOut={onSignOut}
-    >
+  // Tenant chrome (Sidebar + Header), themed and rendered once per branch.
+  const themedChrome = (
+    <TenantThemeShell activeTheme={activeTheme}>
+      <AppLayout
+        sidebarOpen={sidebarOpen}
+        onOpenSidebar={onOpenSidebar}
+        onCloseSidebar={onCloseSidebar}
+        onNav={onNav}
+        activeTheme={activeTheme}
+        onThemeChange={onThemeChange}
+        guest={guest}
+        onAuth={onRequireAuth}
+        onSignOut={onSignOut}
+      >
+        <Outlet />
+      </AppLayout>
+    </TenantThemeShell>
+  );
+
+  // Themed shell for standalone tenant pages (login, onboarding) with no chrome.
+  const themedBare = (
+    <TenantThemeShell activeTheme={activeTheme}>
       <Outlet />
-    </AppLayout>
+    </TenantThemeShell>
   );
 
   return (
     <Routes>
       <Route path="/" element={<RootRedirect authState={authState} />} />
-      <Route path="/login" element={<AuthScreen onAuthed={onAuthed} onGuest={onGuest} />} />
+
+      {/* Auth + onboarding — tenant theme, no dashboard chrome. */}
+      <Route element={themedBare}>
+        <Route path="/login" element={<AuthScreen onAuthed={onAuthed} onGuest={onGuest} />} />
+        <Route path="/signup" element={<AuthScreen onAuthed={onAuthed} onGuest={onGuest} />} />
+        <Route path="/apply/agent" element={<AgentApplication />} />
+        <Route path="/agent-application/status" element={<AgentApplicationStatus />} />
+      </Route>
 
       {/* Guest experience — browse-only; tenant actions redirect to sign-in. */}
-      <Route path="/guest" element={guest ? chrome : <Navigate to="/login" replace />}>
+      <Route path="/guest" element={guest ? themedChrome : <Navigate to="/login" replace />}>
         <Route index element={<Dashboard onNav={onNav} guest onAuth={onRequireAuth} />} />
         <Route path="listings/:propertyId" element={<HouseDetailRoute onNav={onNav} guest onAuth={onRequireAuth} />} />
         <Route path="about" element={<About onNav={onNav} />} />
@@ -76,7 +98,7 @@ export function AppRoutes({
       </Route>
 
       {/* Full authenticated tenant experience. */}
-      <Route path="/tenant" element={authState === "app" ? chrome : <Navigate to="/login" replace />}>
+      <Route path="/tenant" element={authState === "app" ? themedChrome : <Navigate to="/login" replace />}>
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard onNav={onNav} />} />
         <Route path="payments" element={<PayRent onNav={onNav} />} />
@@ -94,6 +116,36 @@ export function AppRoutes({
         <Route path="inbox" element={<InboxPage onNav={onNav} />} />
         <Route path="feedback" element={<RateUs onNav={onNav} />} />
         <Route path="about" element={<About onNav={onNav} />} />
+      </Route>
+
+      {/* Agent workspace — own fixed zinc/indigo shell, outside the tenant theme.
+          Role enforcement in RequireAgent; RLS enforces it again server-side. */}
+      <Route element={<RequireAuth />}>
+        <Route element={<RequireAgent />}>
+          <Route path="/agent" element={<AgentLayout />}>
+            <Route index element={<AgentDashboard />} />
+            <Route path="properties" element={<Properties />} />
+            <Route path="units" element={<Units />} />
+            <Route path="tenants" element={<Tenants />} />
+            <Route path="vacancies" element={<Vacancies />} />
+            <Route path="maintenance" element={<Maintenance />} />
+            <Route path="leads" element={<Leads />} />
+            <Route path="finance" element={<Finance />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+        </Route>
+
+        {/* Admin workspace. */}
+        <Route element={<RequireAdmin />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="dashboard" element={<Navigate to="/admin" replace />} />
+            <Route path="agent-applications" element={<AgentApplicationsPage />} />
+            <Route path="agents" element={<AgentsPage />} />
+            <Route path="agencies" element={<AgenciesPage />} />
+          </Route>
+        </Route>
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
