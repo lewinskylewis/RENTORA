@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Award,
   Briefcase,
   CheckCircle2,
   ChevronRight,
@@ -21,10 +20,10 @@ import type { NavState } from "@/app/types";
 export function Profile({ onNav }: { onNav: (nav: NavState) => void }) {
   const [editing, setEditing] = useState(false);
   const [info, setInfo] = useState({
-    name: "James Mwangi",
-    email: "james.mwangi@email.com",
-    phone: "+254 712 345 678",
-    id: "3401••••",
+    name: "Lewis Kariuki",
+    email: "Lewiskariukiexample@gmail.com",
+    phone: "0706927374",
+    id: "268672673",
     occupation: "Software Engineer",
   });
   const [prefs, setPrefs] = useState({ push: true, email: true, sms: false, marketing: false });
@@ -69,7 +68,7 @@ export function Profile({ onNav }: { onNav: (nav: NavState) => void }) {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-600/5" />
         <div className="relative z-10 flex items-center gap-5 flex-wrap">
           <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl shadow-[0_0_25px_rgba(147,51,234,0.35)] flex-shrink-0">
-            JM
+            LK
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
@@ -80,20 +79,14 @@ export function Profile({ onNav }: { onNav: (nav: NavState) => void }) {
             </div>
             <p className="text-sm text-white/50 truncate">{info.email}</p>
             <div className="flex items-center gap-2 mt-3 flex-wrap">
-              <span className="px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold flex items-center gap-1">
-                <Award className="w-3 h-3" /> Score 850
-              </span>
-              <span className="px-2.5 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs font-semibold">
-                Verified Tenant
-              </span>
+              <button
+                onClick={() => setEditing((e) => !e)}
+                className="px-4 py-2 rounded-xl bg-white/[0.05] border border-white/[0.1] hover:bg-white/[0.1] text-white text-sm font-medium transition-all flex items-center gap-2"
+              >
+                <Edit3 className="w-4 h-4 text-blue-400" /> {editing ? "Done" : "Edit"}
+              </button>
             </div>
           </div>
-          <button
-            onClick={() => setEditing((e) => !e)}
-            className="px-4 py-2 rounded-xl bg-white/[0.05] border border-white/[0.1] hover:bg-white/[0.1] text-white text-sm font-medium transition-all flex items-center gap-2"
-          >
-            <Edit3 className="w-4 h-4 text-blue-400" /> {editing ? "Done" : "Edit"}
-          </button>
         </div>
       </GlassCard>
 

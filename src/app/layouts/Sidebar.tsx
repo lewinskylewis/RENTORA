@@ -177,11 +177,11 @@ export function Sidebar({
             <div className="relative mx-4 mb-6 p-4 rounded-2xl bg-gradient-to-br from-white/[0.04] to-white/[0.01] border border-white/[0.07]">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-base shadow-[0_0_15px_rgba(147,51,234,0.3)] flex-shrink-0">
-                  JM
+                  LK
                 </div>
                 <div className="min-w-0">
-                  <p className="font-semibold text-white/95 text-sm truncate">James Mwangi</p>
-                  <p className="text-xs text-white/40 truncate">james.mwangi@email.com</p>
+                  <p className="font-semibold text-white/95 text-sm truncate">Lewis Kariuki</p>
+                  <p className="text-xs text-white/40 truncate">Lewiskariukiexample@gmail.com</p>
                 </div>
                 <div className="ml-auto flex-shrink-0">
                   <div className="px-2 py-0.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[10px] font-semibold">
@@ -273,7 +273,7 @@ export function Sidebar({
                 </div>
                 <div className="flex-1 text-left">
                   <p className="text-sm font-medium text-red-400/90 group-hover:text-red-400 transition-colors">Log Out</p>
-                  <p className="text-xs text-white/25 mt-0.5">james.mwangi@email.com</p>
+                  <p className="text-xs text-white/25 mt-0.5">Lewiskariukiexample@gmail.com</p>
                 </div>
                 <ChevronRight className="w-4 h-4 text-red-400/30 group-hover:text-red-400/60 group-hover:translate-x-0.5 transition-all" />
               </button>
